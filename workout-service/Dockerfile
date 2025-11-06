@@ -1,25 +1,20 @@
-# Etapa 1: Construcción del proyecto con Maven
+# Etapa 1: Construcción del microservicio con Maven
 FROM eclipse-temurin:17-jdk AS builder
 WORKDIR /app
 
-# Copiar pom.xml y descargar dependencias
-COPY pom.xml .
+# Copiamos solo los archivos necesarios de este microservicio
+COPY workout-service/pom.xml .
 RUN apt-get update && apt-get install -y maven
 RUN mvn dependency:go-offline -B
 
-# Copiar el código fuente y compilar
-COPY src ./src
+# Copiamos el código fuente del microservicio
+COPY workout-service/src ./src
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Imagen final para ejecutar la app
+# Etapa 2: Imagen final
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
-
-# Copiar el .jar desde la etapa anterior (renombrado para consistencia)
 COPY --from=builder /app/target/*.jar workout-service.jar
 
-# Exponer el puerto del microservicio
 EXPOSE 8081
-
-# Ejecutar la aplicación
 ENTRYPOINT ["java", "-jar", "workout-service.jar"]
