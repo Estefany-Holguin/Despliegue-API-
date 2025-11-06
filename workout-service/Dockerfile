@@ -15,11 +15,11 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
 
-# Copiar el .jar desde la etapa anterior
-COPY --from=builder /app/target/*.jar app.jar
+# Copiar el .jar desde la etapa anterior (renombrado para consistencia)
+COPY --from=builder /app/target/*.jar workout-service.jar
 
 # Exponer el puerto del microservicio
 EXPOSE 8081
 
 # Ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "workout-service.jar"]
