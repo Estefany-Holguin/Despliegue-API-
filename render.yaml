@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: workout-service
+    env: docker
+    plan: free
+    branch: main
+    region: oregon
+    buildCommand: "./mvnw clean package -DskipTests"
+    startCommand: "java -jar target/workout-service-1.0.0.jar"
+    autoDeploy: true
+
+    envVars:
+      - key: SPRING_R2DBC_URL
+        value: "r2dbc:postgresql://ep-withered-dust-ady1cqsp-pooler.c-2.us-east-1.aws.neon.tech:5432/neondb?sslmode=require"
+      - key: SPRING_R2DBC_USERNAME
+        value: "neondb_owner"
+      - key: SPRING_R2DBC_PASSWORD
+        value: "npg_C9rvuVNK2SOa"
+      - key: SPRING_R2DBC_PROPERTIES_SSL
+        value: "true"
+      - key: SERVER_PORT
+        value: "8081"
